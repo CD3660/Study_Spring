@@ -36,6 +36,18 @@
 		<input type="submit" value="회원가입(HttpServletRequest)"/>
 		<input type="submit" value="회원가입(@RequestParam)" onclick="action='joinParam'"/>
 		<input type="submit" value="회원가입(DataObject)" onclick="action='joinData'"/>
+		<input type="submit" value="회원가입(@PathVariable)" onclick="go_submit(this.form)"/>
+		
 	</form>
+	<script type="text/javascript">
+		function go_submit(f) {
+			f.action = 'joinPath/'
+				+f.name.value+'/'
+				+f.gender.value+'/'
+				+f.email.value+'/'
+				+f.age.value;
+			
+		}
+	</script>
 </body>
 </html>

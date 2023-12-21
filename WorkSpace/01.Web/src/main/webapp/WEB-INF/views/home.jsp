@@ -9,10 +9,11 @@
 <h1>
 	Hello world!  
 </h1>
-<a href="first">첫번째</a>
+<a href="first">첫번째</a><br/>
 <a href="second">두번째</a>
 <P>  The time on the server is ${serverTime}. </P>
 
-<a href="member">회원가입 화면</a>
+<a href="member">회원가입 화면</a><br/>
+<a href="login">로그인 화면</a>
 </body>
 </html>

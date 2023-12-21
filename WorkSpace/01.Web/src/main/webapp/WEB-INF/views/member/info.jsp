@@ -27,6 +27,11 @@
 			<td>${age }${vo.age }</td>
 		</tr>
 	</table>
-	<input type="button" value="회원가입화면" onclick="location='member'">
+	<input type="button" value="회원가입화면" onclick="go_join()">
+	<script type="text/javascript">
+		function go_join() {
+			location='<c:url value="/member"/>';
+		}
+	</script>
 </body>
 </html>
