@@ -9,7 +9,25 @@
 </head>
 <body>
 	<h3 class="mb-5">고객목록</h3>
-	<table class="table">
+	<div class="row mb-2 justify-content-between">
+
+		<div class="col-auto">
+			<form action="list.cu" method="post">
+				<div class="input-group">
+					<label class="col-form-label me-2">고객명</label><input type="text"
+						class="form-control me-2" name="name" value="${name }"> <input
+						class="btn btn-primary" type="submit" value="검색" />
+				</div>
+			</form>
+		</div>
+
+		<div class="col-auto">
+			<input type="button" class="btn btn-primary" value="고객등록"
+				onclick="location='insertPage.cu'" />
+		</div>
+	</div>
+
+	<table class="table tb-list">
 		<thead>
 			<tr>
 				<th>이름</th>
@@ -20,12 +38,12 @@
 		<tbody>
 			<c:if test="${empty list }">
 				<tr>
-					<td colspan="3">${vo.name }</td>
+					<td colspan="3">데이터가 없습니다.</td>
 				</tr>
 			</c:if>
 			<c:forEach items="${list}" var="vo">
 				<tr>
-					<td>${vo.name }</td>
+					<td><a href="info.cu?customer_id=${vo.customer_id }">${vo.name }</a></td>
 					<td>${vo.gender }</td>
 					<td>${vo.email }</td>
 				</tr>

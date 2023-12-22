@@ -6,8 +6,8 @@ public interface CustomerService {
 	//crud
 
 	int customer_register(CustomerVO vo);
-	List<CustomerVO> customer_list();
-	CustomerVO customer_info();
+	List<CustomerVO> customer_list(String name);
+	CustomerVO customer_info(int id);
 	int customer_update(CustomerVO vo);
 	int customer_delete(int id);
 	

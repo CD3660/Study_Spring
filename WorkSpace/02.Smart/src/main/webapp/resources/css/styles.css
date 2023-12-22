@@ -5122,7 +5122,7 @@ textarea.form-control-lg {
 }
 .list-group-item-light.list-group-item-action.active {
   color: #fff;
-  background-color: #636464;
+/*   background-color: #636464; */
   border-color: #636464;
 }
 

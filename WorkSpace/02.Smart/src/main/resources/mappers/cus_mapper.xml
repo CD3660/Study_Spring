@@ -3,7 +3,30 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="customer">
-	<select id="list" resultType="com.hanul.smart.customer.CustomerVO">
-		select * from customer
+	<select id="list" resultType="cuInfo">
+		select * 
+		from customer 
+		<if test=" name != '' ">
+			where lower(name) like lower('%'||#{name}||'%')
+		</if>
 	</select>
+	<select id="info" resultType="cuInfo">
+		select * 
+		from customer 
+		where customer_id = #{cusomer_id}
+	</select>
+	<update id="update">
+		update customer 
+		set name = #{name}, gender = #{gender}, email = #{email}, phone = #{phone} 
+		where customer_id = #{customer_id}
+	</update>
+	<delete id="delete">
+		delete from customer 
+		where customer_id = #{customer_id}
+	</delete>
+	<insert id="insert">
+		insert into customer 
+		(name, gender, email, phone) 
+		values (#{name},#{gender},#{email},#{phone})
+	</insert>
 </mapper>
