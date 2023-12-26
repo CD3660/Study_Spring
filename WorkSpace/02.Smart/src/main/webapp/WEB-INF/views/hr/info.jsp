@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -44,7 +45,11 @@
 		</tr>
 		<tr>
 			<th>급여</th>
-			<td>${vo.salary }</td>
+			<td><fmt:formatNumber value="${vo.salary }" groupingUsed="true"/></td>
+		</tr>
+		<tr>
+			<th>매니저 아이디</th>
+			<td>${vo.manager_id }</td>
 		</tr>
 	</table>
 	<div class="btn-toolbar justify-content-center gap-2">
@@ -53,16 +58,16 @@
 			class="btn btn-secondary" /> <input type="button" value="정보변경"
 			onclick="location='<c:url value='/hr/updatePage?employee_id=${vo.employee_id }'/>'"
 			class="btn btn-primary" /> <input type="button" value="정보삭제"
-			onclick="" class="btn btn-danger" />
+			id="btn-delete" class="btn btn-danger" />
 	</div>
 	<script type="text/javascript">
-		function go_delete() {
+		$("#btn-delete").click(function name() {
 			if(confirm('정말 ${vo.name} 고객정보를 삭제하시겠습니까?')){
-				location='delete.cu?customer_id=${vo.employee_id }';
+				location="<c:url value='/hr/delete?employee_id=${vo.employee_id }'/>";
 			} else {
 				return false;
 			}
-		}
+		})
 	
 	</script>
 </body>

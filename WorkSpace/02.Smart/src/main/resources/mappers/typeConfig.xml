@@ -5,5 +5,7 @@
 	<typeAliases>
 		<typeAlias type="com.hanul.smart.customer.CustomerVO" alias="cuInfo"/>
 		<typeAlias type="com.hanul.smart.hr.HrVO" alias="hrInfo"/>
+		<typeAlias type="com.hanul.smart.hr.DepartmentVO" alias="deptInfo"/>
+		<typeAlias type="com.hanul.smart.hr.JobVO" alias="jobInfo"/>
 	</typeAliases>
 </configuration>

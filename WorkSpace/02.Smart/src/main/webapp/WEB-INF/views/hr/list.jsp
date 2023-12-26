@@ -9,6 +9,23 @@
 </head>
 <body>
 	<h3 class="mb-5">사원목록</h3>
+	<div class="row mb-2 justify-content-between">
+
+		<div class="col-auto">
+			<form action="<c:url value='/hr/list'/>" method="post">
+				<div class="input-group">
+					<label class="col-form-label me-2">고객명</label><input type="text"
+						class="form-control me-2" name="find" value="${find }"> <input
+						class="btn btn-primary" type="submit" value="검색" />
+				</div>
+			</form>
+		</div>
+
+		<div class="col-auto">
+			<input type="button" class="btn btn-primary" value="사원등록"
+				onclick="location='<c:url value='/hr/insertPage'/>'" />
+		</div>
+	</div>
 
 	<table class="table tb-list">
 		<thead>
@@ -28,8 +45,9 @@
 			</c:if>
 			<c:forEach items="${list}" var="vo">
 				<tr>
-					<td><a href="<c:url value='/hr/info?employee_id=${vo.employee_id }'/>">${vo.employee_id }</a></td>
-					<td>${vo.name }</td>
+					<td>${vo.employee_id }</td>
+					<td><a class="text-link"
+						href="<c:url value='/hr/info?employee_id=${vo.employee_id }'/>">${vo.name }</a></td>
 					<td>${vo.department_name }</td>
 					<td>${vo.job_title }</td>
 					<td>${vo.hire_date }</td>

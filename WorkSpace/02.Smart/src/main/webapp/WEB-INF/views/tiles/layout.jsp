@@ -11,27 +11,49 @@
 <meta name="description" content="" />
 <meta name="author" content="" />
 <c:choose>
-	<c:when test="${category eq 'cu' }"><c:set var="title" value="고객관리: "/></c:when>
-	<c:when test="${category eq 'hr' }"><c:set var="title" value="사원관리: "/></c:when>
-	<c:when test="${category eq 'no' }"><c:set var="title" value="공지사항: "/></c:when>
-	<c:when test="${category eq 'bo' }"><c:set var="title" value="방명록: "/></c:when>
-	<c:when test="${category eq 'da' }"><c:set var="title" value="공공데이터: "/></c:when>
-	<c:when test="${category eq 'vi' }"><c:set var="title" value="시각화: "/></c:when>
+	<c:when test="${category eq 'cu' }">
+		<c:set var="title" value="고객관리: " />
+	</c:when>
+	<c:when test="${category eq 'hr' }">
+		<c:set var="title" value="사원관리: " />
+	</c:when>
+	<c:when test="${category eq 'no' }">
+		<c:set var="title" value="공지사항: " />
+	</c:when>
+	<c:when test="${category eq 'bo' }">
+		<c:set var="title" value="방명록: " />
+	</c:when>
+	<c:when test="${category eq 'da' }">
+		<c:set var="title" value="공공데이터: " />
+	</c:when>
+	<c:when test="${category eq 'vi' }">
+		<c:set var="title" value="시각화: " />
+	</c:when>
 </c:choose>
-<title>${title}스마트 IoT</title>
+<title>${title}스마트IoT</title>
 <!-- Favicon-->
 <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
 <!-- Core theme CSS (includes Bootstrap)-->
 <link href="<c:url value='/css/styles.css'/>" rel="stylesheet" />
-<link href="<c:url value='/css/common.css'/>" rel="stylesheet" />
+<link href="<c:url value='/css/common.css?<%=new java.util.Date()%>>'/>"
+	rel="stylesheet" />
+<link rel="stylesheet"
+	href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/resources/demos/style.css">
+<script src="https://code.jquery.com/jquery-3.7.1.js"
+	integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+	crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<script src="<c:url value='/js/common.js?<%=new java.util.Date()%>>'/>"></script>
 </head>
 <body>
 	<div class="d-flex" id="wrapper">
 		<!-- Sidebar-->
 		<div class="border-end bg-white" id="sidebar-wrapper">
 			<div class="sidebar-heading border-bottom bg-light">
-				<a href='<c:url value="/"/>'> <img src="<c:url value="/img/hanul.logo.png"/>"
-					style="width: 20%"> <span>스마트 IoT 융합</span>
+				<a href='<c:url value="/"/>'> <img
+					src="<c:url value="/img/hanul.logo.png"/>" style="width: 20%">
+					<span>스마트 IoT 융합</span>
 				</a>
 			</div>
 			<div class="list-group list-group-flush">

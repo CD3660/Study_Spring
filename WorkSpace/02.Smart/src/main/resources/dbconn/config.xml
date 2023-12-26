@@ -21,6 +21,8 @@
 	<bean class="org.mybatis.spring.SqlSessionTemplate" id="hanul">
 		<constructor-arg name="sqlSessionFactory" ref="hanul_factory"/>
 	</bean>
+	
+	
 	<bean class="org.apache.commons.dbcp2.BasicDataSource" id="hr_dbcp">
 		<property name="driverClassName" value="${db.driver}"/>
 		<property name="url" value="${db.url}"/>

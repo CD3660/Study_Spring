@@ -38,3 +38,8 @@ table.tb-row td {
 table.tb-update td {
 	padding: 0px 16px;
 }
+
+a.text-link:hover {
+	text-decoration: underline;
+	font-weight: bold;
+}
