@@ -19,10 +19,32 @@
 		j.job_id
 		left outer join employees m
 		on e.manager_id = m.employee_id
-		<if test="find != '' ">
-			where lower(e.first_name||e.last_name) like
-			lower('%'||#{find}||'%')
-		</if>
+		order by e.employee_id asc
+	</select>
+	<select id="empDept" resultType="hrInfo">
+		select e.* , e.first_name||'
+		'||e.last_name name, d.department_name,
+		j.job_title, m.first_name||'
+		'||m.last_name manager_name
+		from employees e
+		left
+		outer join departments d
+		on
+		e.department_id = d.department_id
+		left outer
+		join jobs j
+		on e.job_id =
+		j.job_id
+		left outer join employees m
+		on e.manager_id = m.employee_id
+		<choose>
+    		<when test="dept != 0">
+        		where e.department_id = #{deptno}
+    		</when>
+    		<otherwise>
+        		where e.department_id is null
+    		</otherwise>
+		</choose>
 		order by e.employee_id asc
 	</select>
 	<select id="manager" resultType="hrInfo">
@@ -33,6 +55,11 @@
 		employees e
 		order by
 		first_name||last_name asc
+	</select>
+	<select id="empDeptList" resultType="deptInfo" >
+		select distinct department_id, nvl(department_name, '소속없음') department_name
+		from employees e left outer join departments d using(department_id)
+		order by department_name
 	</select>
 	<select id="info" resultType="hrInfo">
 		select e.* , e.first_name||'

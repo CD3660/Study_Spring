@@ -10,17 +10,17 @@
 <body>
 	<h3 class="mb-5">사원목록</h3>
 	<div class="row mb-2 justify-content-between">
-
-		<div class="col-auto">
-			<form action="<c:url value='/hr/list'/>" method="post">
-				<div class="input-group">
-					<label class="col-form-label me-2">고객명</label><input type="text"
-						class="form-control me-2" name="find" value="${find }"> <input
-						class="btn btn-primary" type="submit" value="검색" />
-				</div>
+		<div class="col-auto d-flex">
+			<form class="form-inline" action="list">
+				<select class="form-select" name="department_id"
+					aria-label="Default select example" onchange="submit()">
+					<option value="-1">전체 조회</option>
+					<c:forEach items="${dept}" var="d">
+						<option value="${d.department_id}" ${d.department_id == department_id ? 'selected':''}>${d.department_name}</option>
+					</c:forEach>
+				</select>
 			</form>
 		</div>
-
 		<div class="col-auto">
 			<input type="button" class="btn btn-primary" value="사원등록"
 				onclick="location='<c:url value='/hr/insertPage'/>'" />

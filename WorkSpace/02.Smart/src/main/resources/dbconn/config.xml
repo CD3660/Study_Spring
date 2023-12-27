@@ -38,4 +38,6 @@
 	<bean class="org.mybatis.spring.SqlSessionTemplate" id="hr">
 		<constructor-arg name="sqlSessionFactory" ref="hr_factory"/>
 	</bean>
+	<bean class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+	
 </beans>

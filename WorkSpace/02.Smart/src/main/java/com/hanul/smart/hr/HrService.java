@@ -12,8 +12,11 @@ public class HrService {
 
 	@Autowired @Qualifier("hr") private SqlSession sql;
 	
-	public List<HrVO> list(String find) {
-		return sql.selectList("hr.list", find);
+	public List<HrVO> list() {
+		return sql.selectList("hr.list");
+	}
+	public List<HrVO> list(int deptno) {
+		return sql.selectList("hr.empDept", deptno);
 	}
 	public List<HrVO> manager() {
 		return sql.selectList("hr.manager");
@@ -39,6 +42,9 @@ public class HrService {
 	}
 	public List<JobVO> hr_job_list() {
 		return sql.selectList("hr.jobList");
+	}
+	public List<DepartmentVO> emp_department_list() {
+		return sql.selectList("hr.empDeptList");
 	}
 
 }
