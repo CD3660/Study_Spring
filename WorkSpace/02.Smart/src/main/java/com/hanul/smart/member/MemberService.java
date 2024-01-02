@@ -88,8 +88,8 @@ public class MemberService {
 		return sql.selectOne("member.info", user_id);
 	}
 
-	public int member_update(MemberVO vo) {
-		return 0;
+	public boolean member_update(MemberVO vo) {
+		return true;
 	}
 
 	public int member_delete(String user_id) {

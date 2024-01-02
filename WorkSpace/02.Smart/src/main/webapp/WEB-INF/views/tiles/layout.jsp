@@ -102,7 +102,7 @@
 										aria-labelledby="navbarDropdown">
 										<a class="dropdown-item" href="#!">아이디: ${loginInfo.user_id}</a> <a
 											class="dropdown-item" href="#!">마이페이지</a>
-											<a class="dropdown-item" href="#!">비밀번호 변경</a>
+											<a class="dropdown-item" href="<c:url value='/member/changePw'/>">비밀번호 변경</a>
 										<div class="dropdown-divider"></div>
 										<a class="dropdown-item" href="<c:url value='/member/logout'/>">로그아웃</a>
 									</div></li>
