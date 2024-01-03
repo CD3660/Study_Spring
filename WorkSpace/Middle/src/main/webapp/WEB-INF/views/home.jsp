@@ -50,19 +50,64 @@
 		아이디: <input type="text" id="user_id" /> 비밀번호: <input type="password"
 			id="user_pw" /><a id="login" target="_blank" href="">로그인</a>
 	</div>
+	<hr />
+	<form method="post" action="<c:url value='/member/join'/>" enctype="multipart/form-data">
+		<div>
+			회원명: <input type="text" name="name" value="신규회원" />
+		</div>
+		<div>
+			아이디: <input type="text" name="user_id" value="aaaa" />
+		</div>
+		<div>
+			비번: <input type="text" name="user_pw" value="0000" />
+		</div>
+		<div>
+			성별: <input type="text" name="gender" value="남" />
+		</div>
+		<div>
+			이메일: <input type="text" name="email" value="aa" />
+		</div>
+		<div>
+			주소: <input type="text" name="address" value="주소" />
+		</div>
+		<div>
+			전화번호: <input type="text" name="phone" value="000" />
+		</div>
+		<div>
+			생년월일: <input type="date" name="birth" />
+		</div>
+		<div>
+			프로필: <input type="file" name="andFile" />
+		</div>
+		<div>
+			<input type="submit" value="회원가입" onclick="setData()" />
+		</div>
+		<input type="hidden" name="vo" />
+	</form>
 
 	<script src="https://code.jquery.com/jquery-3.7.1.js"
 		integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
 		crossorigin="anonymous"></script>
 	<script type="text/javascript">
+		function setData() {
+			var member = {};
+			member.name = $("[name=name]").val();
+			member.user_id = $("[name=user_id]").val();
+			member.user_pw = $("[name=user_pw]").val();
+			member.gender = $("[name=gender]").val();
+			member.email = $("[name=email]").val();
+			member.address = $("[name=address]").val();
+			member.phone = $("[name=phone]").val();
+			member.birth = $("[name=birth]").val();
+			$("[name=vo]").val(JSON.stringify(member));
+		} 
 		$("#login").click(
 				function() {
 					$(this).attr(
 							"href",
 							"<c:url value='/member/login'/>?user_id="
-									+ $("#user_id").val()
-									+"&user_pw="
-									+$("#user_pw").val())
+									+ $("#user_id").val() + "&user_pw="
+									+ $("#user_pw").val())
 				});
 		$("#search").click(
 				function() {

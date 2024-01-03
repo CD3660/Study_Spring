@@ -5,6 +5,14 @@
 <mapper namespace="me">
 	<select id="info" resultType="member">
 		select * from member where
-		user_id = #{user_id}
+		user_id =
+		#{user_id}
 	</select>
+	<insert id="join">
+		insert into member
+		(name,user_id,user_pw,gender,email,address,phone,birth,profile)
+		values
+		(#{name}, #{user_id}, #{user_pw}, #{gender}, #{email}, #{address},
+		#{phone}, #{birth},#{profile})
+	</insert>
 </mapper>

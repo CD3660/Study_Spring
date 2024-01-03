@@ -4,6 +4,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +16,7 @@ import com.hanul.smart.member.MemberVO;
 
 @Controller
 @RequestMapping("/member")
+@PropertySource("classpath:dbconn/conninfo.properties")
 public class MemberController {
 	
 	@Autowired BCryptPasswordEncoder pwEncoder;
@@ -33,6 +36,18 @@ public class MemberController {
 	public String login(HttpSession session, HttpServletRequest req, MemberVO vo) {
 		
 		return service.login(vo, req, session);
+	}
+	
+	 @Value("${naver.clientId}")
+	 private String clientId;
+	
+	 @Value("${naver.clientPw}")
+	 private String clientPw;
+	 
+	@RequestMapping("/naverLogin")
+	public String naverLogin(HttpSession session, HttpServletRequest req) {
+		
+		return null;
 	}
 	
 	@RequestMapping("/logout")

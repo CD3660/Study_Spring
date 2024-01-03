@@ -16,4 +16,7 @@ public class MemberService {
 	public MemberVO info(String user_id) {
 		return sql.selectOne("me.info",user_id);
 	}
+	public int join(MemberVO vo) {
+		return sql.insert("me.join",vo);
+	}
 }

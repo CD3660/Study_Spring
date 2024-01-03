@@ -6,6 +6,16 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style type="text/css">
+#naver {
+	background: url("<c:url value='/img/naver.png'/>") center/contain
+		no-repeat #03c75a;
+}
+
+#kakao {
+	background: url("");
+}
+</style>
 </head>
 <body>
 	<div class="row justify-content-center">
@@ -27,19 +37,30 @@
 							<input class="form-control" id="user_pw" type="password"
 								name="user_pw" placeholder="비밀번호"> <label for="user_pw">비밀번호</label>
 						</div>
-						<div class="d-flex align-items-center justify-content-between mt-4 mb-0">
-							<input class="btn btn-primary form-control" type="submit" value="로그인" />
-						</div>
-						<hr>
 						<div
 							class="d-flex align-items-center justify-content-between mt-4 mb-0">
-							<a class="small" href="password.html">회원가입</a>
-							<a class="small" href="<c:url value='/member/findPw'/>">비밀번호 찾기</a>
+							<input class="btn btn-primary form-control" type="submit"
+								value="로그인" />
+						</div>
+						<hr>
+						<div class="d-flex gap-3 mt-4 mb-0">
+							<input type="button" class="form-control" id="naver" /> <input
+								type="button" class="form-control" id="kakao" />
+						</div>
+						<div
+							class="d-flex align-items-center justify-content-between mt-4 mb-0">
+							<a class="small" href="password.html">회원가입</a> <a class="small"
+								href="<c:url value='/member/findPw'/>">비밀번호 찾기</a>
 						</div>
 					</form>
 				</div>
 			</div>
 		</div>
 	</div>
+	<script type="text/javascript">
+		$("#naver, #kakao").click(function() {
+			location = $(this).attr("id") + "Login";
+		})	
+	</script>
 </body>
 </html>
