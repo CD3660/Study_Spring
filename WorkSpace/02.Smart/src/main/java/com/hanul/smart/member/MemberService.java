@@ -77,7 +77,8 @@ public class MemberService {
 	}
 
 	public int member_join(MemberVO vo) {
-		return 0;
+		
+		return sql.insert("member.insert", vo);
 	}
 
 	public List<MemberVO> member_list() {
@@ -88,8 +89,9 @@ public class MemberService {
 		return sql.selectOne("member.info", user_id);
 	}
 
-	public boolean member_update(MemberVO vo) {
-		return true;
+	public int member_update(MemberVO vo) {
+		
+		return sql.update("member.update", vo);
 	}
 
 	public int member_delete(String user_id) {

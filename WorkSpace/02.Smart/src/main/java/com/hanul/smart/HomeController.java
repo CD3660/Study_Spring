@@ -22,11 +22,11 @@ public class HomeController {
 	@Autowired private BCryptPasswordEncoder pwEncoder;
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(HttpSession session, Model model) {
-		String user_id = "cksdud4188", user_pw = "2d01a81042fb";
-		MemberVO vo = member.member_info(user_id);
-		if(pwEncoder.matches(user_pw, vo.getUser_pw())) {
-			session.setAttribute("loginInfo", vo);
-		}
+//		String user_id = "cksdud4188", user_pw = "2d01a81042fb";
+//		MemberVO vo = member.member_info(user_id);
+//		if(pwEncoder.matches(user_pw, vo.getUser_pw())) {
+//			session.setAttribute("loginInfo", vo);
+//		}
 		
 		
 		session.removeAttribute("category");

@@ -32,13 +32,18 @@
 </c:choose>
 <title>${title}스마트IoT</title>
 <!-- Favicon-->
-<link rel="icon" type="image/x-icon" href="<c:url value='/assets/favicon.ico'/>" />
+<link rel="icon" type="image/x-icon"
+	href="<c:url value='/assets/favicon.ico'/>" />
 <!-- Core theme CSS (includes Bootstrap)-->
 <link href="<c:url value='/css/styles.css'/>" rel="stylesheet" />
 <link href="<c:url value='/css/common.css?<%=new java.util.Date()%>>'/>"
 	rel="stylesheet" />
 <link rel="stylesheet"
 	href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+	integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+	crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link rel="stylesheet" href="/resources/demos/style.css">
 <script src="https://code.jquery.com/jquery-3.7.1.js"
 	integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
@@ -87,24 +92,38 @@
 						<span class="navbar-toggler-icon"></span>
 					</button>
 					<div class="collapse navbar-collapse" id="navbarSupportedContent">
-						<ul class="navbar-nav ms-auto mt-2 mt-lg-0">
+						<ul class="navbar-nav ms-auto mt-2 mt-lg-0 align-items-center">
 							<c:if test="${empty loginInfo }">
 
-								<li class="nav-item active"><a class="nav-link" href="<c:url value='/member/loginPage'/>">로그인</a></li>
+								<li class="nav-item active"><a class="nav-link"
+									href="<c:url value='/member/loginPage'/>">로그인</a></li>
 								<li class="nav-item"><a class="nav-link" href="#!">회원가입</a></li>
 							</c:if>
 							<c:if test="${!empty loginInfo }">
+								<li class="nav-item"><c:choose>
+										<c:when test="${empty loginInfo.profile }">
+											<i class="fa-solid fa-circle-user font-profile"></i>
+										</c:when>
+										<c:otherwise>
+											<img class="profile" src="${loginInfo.profile }">
+										</c:otherwise>
+									</c:choose></li>
 								<li class="nav-item dropdown"><a
 									class="nav-link dropdown-toggle" id="navbarDropdown" href="#"
 									role="button" data-bs-toggle="dropdown" aria-haspopup="true"
 									aria-expanded="false">${loginInfo.name}</a>
 									<div class="dropdown-menu dropdown-menu-end"
 										aria-labelledby="navbarDropdown">
-										<a class="dropdown-item" href="#!">아이디: ${loginInfo.user_id}</a> <a
-											class="dropdown-item" href="#!">마이페이지</a>
-											<a class="dropdown-item" href="<c:url value='/member/changePw'/>">비밀번호 변경</a>
-										<div class="dropdown-divider"></div>
-										<a class="dropdown-item" href="<c:url value='/member/logout'/>">로그아웃</a>
+										<c:if test="${empty loginInfo.social }">
+											<a class="dropdown-item" href="#!">아이디:
+												${loginInfo.user_id}</a>
+											<a class="dropdown-item" href="#!">마이페이지</a>
+											<a class="dropdown-item"
+												href="<c:url value='/member/changePw'/>">비밀번호 변경</a>
+											<div class="dropdown-divider"></div>
+										</c:if>
+										<a class="dropdown-item"
+											href="<c:url value='/member/logout'/>">로그아웃</a>
 									</div></li>
 							</c:if>
 						</ul>
