@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="no">
+	<select id="list" resultType="noInfo">
+		select row_number() over(order by
+		id) no, n.*, m.name
+		from notice n
+		left outer join member m
+		on n.writer =
+		m.user_id
+		order by no desc
+	</select>
+	<select id="info" resultType="noInfo">
+		select n.*, m.name
+		from notice n
+		left outer join member m
+		on n.writer = m.user_id
+		where n.id = #{id}
+		order by id
+	</select>
+	<update id="readcnt">
+		update notice
+		set readcnt = readcnt+1
+		where id = #{id}
+	</update>
+	<insert id="insert">
+		insert into notice
+		(title, content, writer, filepath,
+		filename)
+		values
+		(#{title},#{content},#{writer},#{filepath,jdbcType=VARCHAR},#{filename,jdbcType=VARCHAR})
+	</insert>
+	<delete id="delete">
+		delete from notice
+		where id = #{id}
+	</delete>
+</mapper>

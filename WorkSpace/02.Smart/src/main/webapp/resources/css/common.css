@@ -51,3 +51,19 @@ a.text-link:hover {
 .font-profile {
 	font-size: 30px;
 }
+.date + .date-remover {
+	position: relative;
+	right: 22px;
+	display:none;
+}
+
+input[type=file] {
+	display:none;
+}
+.file-preview img{
+	max-width: 50px;
+	max-height: 50px;
+}
+textarea.form-control {
+	resize: none;
+}

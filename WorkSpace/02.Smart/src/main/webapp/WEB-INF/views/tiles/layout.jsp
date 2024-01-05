@@ -29,6 +29,9 @@
 	<c:when test="${category eq 'vi' }">
 		<c:set var="title" value="시각화: " />
 	</c:when>
+	<c:when test="${category eq 'join' }">
+		<c:set var="title" value="회원가입: " />
+	</c:when>
 </c:choose>
 <title>${title}스마트IoT</title>
 <!-- Favicon-->
@@ -97,7 +100,7 @@
 
 								<li class="nav-item active"><a class="nav-link"
 									href="<c:url value='/member/loginPage'/>">로그인</a></li>
-								<li class="nav-item"><a class="nav-link" href="#!">회원가입</a></li>
+								<li class="nav-item"><a class="nav-link" href="<c:url value='/member/joinPage'/>">회원가입</a></li>
 							</c:if>
 							<c:if test="${!empty loginInfo }">
 								<li class="nav-item"><c:choose>

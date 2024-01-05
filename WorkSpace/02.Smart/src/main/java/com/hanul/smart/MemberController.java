@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -117,13 +118,14 @@ public class MemberController {
 			vo.setName(name);
 			vo.setProfile(profile);
 			vo.setPhone(phone);
-			vo.setSocial("K");
+			vo.setSocial("N");
 
-			if (service.member_info(id) != null) {
+			if (service.member_info(id) == null) {
 				service.member_join(vo);
 			} else {
 				service.member_update(vo);
 			}
+			vo = service.member_info(id);
 			session.setAttribute("loginInfo", vo);
 
 		}
@@ -172,19 +174,34 @@ public class MemberController {
 		vo.setUser_id(id);
 		vo.setName(name);
 		vo.setProfile(profile);
-		vo.setSocial("N");
+		vo.setSocial("K");
 
-		if (service.member_info(id) != null) {
+		if (service.member_info(id) == null) {
 			service.member_join(vo);
 		} else {
 			service.member_update(vo);
 		}
+		vo = service.member_info(id);
 		session.setAttribute("loginInfo", vo);
 		return "redirect:/";
 	}
 
 	@RequestMapping("/logout")
-	public String logout(HttpSession session) {
+	public String logout(HttpSession session, HttpServletRequest req) {
+		MemberVO vo = (MemberVO) session.getAttribute("loginInfo");
+
+		if ("K".equals(vo.getSocial())) {
+			StringBuilder url = new StringBuilder();
+			url.append("https://kauth.kakao.com/oauth/logout?");
+			url.append("client_id=").append(kakaoClientId);
+			url.append("&logout_redirect_uri=").append(comm.appURL(req));
+			session.removeAttribute("loginInfo");
+			return "redirect:" + url.toString();
+
+		} else if ("N".equals(vo.getSocial())) {
+
+		}
+
 		session.removeAttribute("loginInfo");
 
 		return "redirect:/";
@@ -202,6 +219,13 @@ public class MemberController {
 	public String resetPw(MemberVO vo) {
 
 		return service.resetPw(vo);
+	}
+
+	@ResponseBody
+	@RequestMapping("/checkId")
+	public boolean checkId(String user_id) {
+
+		return service.member_info(user_id) == null ? true : false;
 	}
 
 	@RequestMapping("/changePw")
@@ -230,5 +254,38 @@ public class MemberController {
 
 		return service.member_update(vo);
 
+	}
+
+	@RequestMapping("/joinPage")
+	public String joinPage(HttpSession session, String user_pw) {
+		session.setAttribute("category", "join");
+
+		return "member/join";
+
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/join", produces = "text/html; charset=utf-8")
+	public String join(HttpSession session, MemberVO vo, HttpServletRequest req, MultipartFile imgFile) {
+		vo.setUser_pw(pwEncoder.encode(vo.getUser_pw()));
+		if (!imgFile.isEmpty()) {
+			vo.setProfile(comm.fileUpload("profile", imgFile, req));
+		}
+		StringBuilder msg = new StringBuilder();
+		msg.append("<script>");
+		if (service.member_join(vo) == 1) {
+//			session.setAttribute("loginInfo", vo);
+			String welcomeFile = session.getServletContext().getRealPath("resources/files/과정평가형_풀이.pdf");
+			comm.sendWelcome(vo, welcomeFile);
+			
+			msg.append("alert('회원가입 완료');");
+			msg.append("location='").append(req.getContextPath()+"/member/loginPage").append("';");
+		} else {
+			msg.append("alert('회원가입 실패');");
+			msg.append("history.go(-1);");
+
+		}
+		msg.append("</script>");
+		return msg.toString();
 	}
 }

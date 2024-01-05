@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.Scanner;
 
 import org.apache.ibatis.session.SqlSession;
+import org.junit.jupiter.api.Disabled;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -24,6 +25,7 @@ public class Test {
 
 	private BCryptPasswordEncoder pwEncoder = new BCryptPasswordEncoder();
 
+	@Disabled
 	@org.junit.Test
 	public void login() {
 		Scanner sc = new Scanner(System.in);
@@ -61,13 +63,17 @@ public class Test {
 		vo.setUser_pw( pwEncoder.encode(sc.nextLine()) );
 		System.out.print("이메일: ");
 		vo.setEmail(sc.nextLine());
-
+		System.out.println("관리자(Y/N)");
+		vo.setRole(sc.nextLine().toLowerCase().equals("y")?"ADMIN":"USER");
+		
+		
 		sc.close();
-
+		
 		int dml = sql.insert("member.joinTest", vo);
 		assertEquals(dml, 1);
 	}
 
+	@Disabled
 	@org.junit.Test
 	public void query_test() {
 		System.out.println("오늘:" + sql.selectOne("today"));
