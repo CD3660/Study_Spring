@@ -58,7 +58,7 @@
 			location = "list";
 		});
 		$("#btn-update").click(function() {
-			location = "updatePage";
+			location = "updatePage?id=${vo.id}";
 		});
 		$("#btn-delete").click(function() {
 			if(confirm("정말 삭제하시겠습니까?")) location = "delete?id=${vo.id}";

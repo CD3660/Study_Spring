@@ -32,8 +32,7 @@ public class NoticeService {
 	}
 
 	public int notice_update(NoticeVO vo) {
-
-		return 0;
+		return sql.update("no.update", vo);
 	}
 
 	public int notice_delete(int id) {

@@ -19,52 +19,81 @@ import com.hanul.smart.notice.NoticeVO;
 @RequestMapping("/notice")
 public class NoticeController {
 
-	@Autowired private NoticeService service;
-	@Autowired private CommonUtility comm;
-	
+	@Autowired
+	private NoticeService service;
+	@Autowired
+	private CommonUtility comm;
+
 	@RequestMapping("/list")
 	public String list(Model model, HttpSession session) {
 		session.setAttribute("category", "no");
 		model.addAttribute("list", service.notice_list());
-		
+
 		return "notice/list";
 	}
-	
+
 	@RequestMapping("/info")
 	public String info(Model model, int id) {
 		service.notice_read(id);
 		model.addAttribute("vo", service.notice_info(id));
 		model.addAttribute("crlf", "\r\n");
-		
+
 		return "notice/info";
 	}
-	
+
 	@RequestMapping("/insertPage")
 	public String insertPage() {
-		
+
 		return "notice/insert";
 	}
-	
+
 	@RequestMapping("/insert")
 	public String insert(HttpSession session, NoticeVO vo, MultipartFile file, HttpServletRequest req) {
 		MemberVO member = (MemberVO) session.getAttribute("loginInfo");
 		vo.setWriter(member.getUser_id());
-		if(!file.isEmpty()) {
+		if (!file.isEmpty()) {
 			vo.setFilename(file.getOriginalFilename());
 			vo.setFilepath(comm.fileUpload("notice", file, req));
 		}
-		
+
 		service.notice_insert(vo);
-		
+
 		return "redirect:/notice/list";
 	}
-	
+
+	@RequestMapping("/update")
+	public String update(HttpSession session, NoticeVO vo, MultipartFile file, HttpServletRequest req) {
+		NoticeVO prev = service.notice_info(vo.getId());
+		if (file.isEmpty()) {
+			if (!vo.getFilename().isEmpty()) {
+				vo.setFilepath(prev.getFilepath());
+			}
+		} else {
+			vo.setFilename(file.getOriginalFilename());
+			vo.setFilepath(comm.fileUpload("notice", file, req));
+		}
+
+		if(service.notice_update(vo)==1) {
+			if(file.isEmpty()) {
+				if(vo.getFilename().isEmpty()) {
+					comm.fileDelete(prev.getFilepath(), req);
+				}
+			} else {
+				comm.fileDelete(prev.getFilepath(), req);
+			}
+		}
+		
+		
+
+		return "redirect:/notice/info?id=" + vo.getId();
+	}
+
 	@RequestMapping("/updatePage")
 	public String updatePage(Model model, int id) {
 		model.addAttribute("vo", service.notice_info(id));
 		return "notice/update";
 	}
-	
+
 	@RequestMapping("/delete")
 	public String delete(HttpSession session, HttpServletRequest req, int id) {
 		String filepath = service.notice_info(id).getFilepath();
@@ -72,9 +101,9 @@ public class NoticeController {
 		service.notice_delete(id);
 		return "redirect:/notice/list";
 	}
-	
+
 	@RequestMapping("/download")
-	public void download(HttpSession session, HttpServletRequest req, HttpServletResponse resp,int id) {
+	public void download(HttpSession session, HttpServletRequest req, HttpServletResponse resp, int id) {
 		NoticeVO vo = service.notice_info(id);
 		comm.fileDownload(vo, req, resp);
 	}

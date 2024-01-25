@@ -32,6 +32,14 @@
 		values
 		(#{title},#{content},#{writer},#{filepath,jdbcType=VARCHAR},#{filename,jdbcType=VARCHAR})
 	</insert>
+	<update id="update">
+		UPDATE notice
+		SET title = #{title},
+		content = #{content},
+		filepath = #{filepath,jdbcType=VARCHAR},
+		filename = #{filename,jdbcType=VARCHAR}
+		WHERE id = #{id}
+	</update>
 	<delete id="delete">
 		delete from notice
 		where id = #{id}
