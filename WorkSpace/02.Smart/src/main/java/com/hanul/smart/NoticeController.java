@@ -1,5 +1,8 @@
 package com.hanul.smart;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.hanul.smart.common.CommonUtility;
+import com.hanul.smart.common.PageVO;
 import com.hanul.smart.member.MemberVO;
 import com.hanul.smart.notice.NoticeService;
 import com.hanul.smart.notice.NoticeVO;
@@ -25,16 +29,17 @@ public class NoticeController {
 	private CommonUtility comm;
 
 	@RequestMapping("/list")
-	public String list(Model model, HttpSession session) {
+	public String list(Model model, HttpSession session, PageVO page) {
 		session.setAttribute("category", "no");
-		model.addAttribute("list", service.notice_list());
+		model.addAttribute("page", service.notice_list(page));
 
 		return "notice/list";
 	}
 
 	@RequestMapping("/info")
-	public String info(Model model, int id) {
+	public String info(Model model, int id, PageVO page) {
 		service.notice_read(id);
+		model.addAttribute("page", page);
 		model.addAttribute("vo", service.notice_info(id));
 		model.addAttribute("crlf", "\r\n");
 
@@ -62,7 +67,7 @@ public class NoticeController {
 	}
 
 	@RequestMapping("/update")
-	public String update(HttpSession session, NoticeVO vo, MultipartFile file, HttpServletRequest req) {
+	public String update(HttpSession session, NoticeVO vo, MultipartFile file, HttpServletRequest req, PageVO page) throws UnsupportedEncodingException {
 		NoticeVO prev = service.notice_info(vo.getId());
 		if (file.isEmpty()) {
 			if (!vo.getFilename().isEmpty()) {
@@ -73,33 +78,34 @@ public class NoticeController {
 			vo.setFilepath(comm.fileUpload("notice", file, req));
 		}
 
-		if(service.notice_update(vo)==1) {
-			if(file.isEmpty()) {
-				if(vo.getFilename().isEmpty()) {
+		if (service.notice_update(vo) == 1) {
+			if (file.isEmpty()) {
+				if (vo.getFilename().isEmpty()) {
 					comm.fileDelete(prev.getFilepath(), req);
 				}
 			} else {
 				comm.fileDelete(prev.getFilepath(), req);
 			}
 		}
-		
-		
 
-		return "redirect:/notice/info?id=" + vo.getId();
+		return "redirect:/notice/info?id=" + vo.getId() + "&nowPage=" + page.getNowPage() + "&search="
+				+ page.getSearch() + "&keyword=" + URLEncoder.encode(page.getKeyword(), "utf-8");
 	}
 
 	@RequestMapping("/updatePage")
-	public String updatePage(Model model, int id) {
+	public String updatePage(Model model, int id, PageVO page) {
 		model.addAttribute("vo", service.notice_info(id));
+		model.addAttribute("page", page);
 		return "notice/update";
 	}
 
 	@RequestMapping("/delete")
-	public String delete(HttpSession session, HttpServletRequest req, int id) {
+	public String delete(HttpSession session, HttpServletRequest req, int id, PageVO page) throws UnsupportedEncodingException {
 		String filepath = service.notice_info(id).getFilepath();
 		comm.fileDelete(filepath, req);
 		service.notice_delete(id);
-		return "redirect:/notice/list";
+		return "redirect:/notice/list"+ "?nowPage=" + page.getNowPage() + "&search="
+				+ page.getSearch() + "&keyword=" + URLEncoder.encode(page.getKeyword(), "utf-8");
 	}
 
 	@RequestMapping("/download")

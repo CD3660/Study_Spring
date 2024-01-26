@@ -13,6 +13,7 @@ public class PageVO {
 	private int beginPage, endPage;
 	private int nowBlock =1, nowPage =1;
 	private List<Object> list;
+	private String search="all", keyword="";
 		
 	public void setTotalData(int totalData) {
 		this.totalData = totalData;

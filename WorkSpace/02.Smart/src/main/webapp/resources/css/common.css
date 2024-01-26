@@ -67,3 +67,7 @@ input[type=file] {
 textarea.form-control {
 	resize: none;
 }
+.input-group .form-select {
+	width:100px;
+	flex:initial;
+}

@@ -49,11 +49,15 @@
 			</tr>
 		</table>
 		<input type="hidden" name="filename" value="${vo.filename}" />
+		<input type="hidden" name="nowPage" value="${page.nowPage}" />
+		<input type="hidden" name="search" value="${page.search}" />
+		<input type="hidden" name="keyword" value="${page.keyword}" />
 	</form>
 	<div class="btn-toolbar justify-content-center gap-2">
 		<button class="btn btn-primary" id="btn-update">공지사항 수정</button>
 		<button class="btn btn-danger" id="btn-cancle">취소</button>
 	</div>
+	<c:set var="params" value="nowPage=${page.nowPage }&search=${page.search }&keyword=${page.keyword }"/>
 	<script type="text/javascript">
 		$("#btn-update").click(function() {
 			if (notEmpty()) {
@@ -62,7 +66,7 @@
 			}
 		});
 		$("#btn-cancle").click(function() {
-			location = "info?id=${vo.id}";
+			location = "info?id=${vo.id}&${params}";
 		});
 	</script>
 </body>

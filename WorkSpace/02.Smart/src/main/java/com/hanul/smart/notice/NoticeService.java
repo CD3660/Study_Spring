@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.hanul.smart.common.PageVO;
+
 @Service
 public class NoticeService {
 
@@ -16,6 +18,12 @@ public class NoticeService {
 
 	public List<NoticeVO> notice_list() {
 		return sql.selectList("no.list");
+	}
+
+	public PageVO notice_list(PageVO page) {
+		page.setTotalData(sql.selectOne("no.listSize", page));
+		page.setList(sql.selectList("no.list", page));
+		return page;
 	}
 
 	public NoticeVO notice_info(int id) {
