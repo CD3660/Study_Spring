@@ -49,6 +49,9 @@
 			<button class="btn btn-primary" id="btn-update">공지사항 수정</button>
 			<button class="btn btn-danger" id="btn-delete">공지사항 삭제</button>
 		</c:if>
+		<c:if test="${not empty loginInfo}">
+		<button class="btn btn-primary" id="btn-reply">답글 작성</button>
+		</c:if>
 	</div>
 	<c:set var="params" value="nowPage=${page.nowPage }&search=${page.search }&keyword=${page.keyword }"/>
 	<script type="text/javascript">
@@ -63,6 +66,9 @@
 		});
 		$("#btn-delete").click(function() {
 			if(confirm("정말 삭제하시겠습니까?")) location = "delete?id=${vo.id}&${params}";
+		});
+		$("#btn-reply").click(function() {
+			location = "replyPage?id=${vo.id}&${params}";
 		});
 	</script>
 </body>

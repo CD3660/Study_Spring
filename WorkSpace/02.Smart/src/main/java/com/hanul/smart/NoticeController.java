@@ -98,6 +98,28 @@ public class NoticeController {
 		model.addAttribute("page", page);
 		return "notice/update";
 	}
+	
+	@RequestMapping("/reply")
+	public String reply(Model model, HttpSession session, NoticeVO vo, MultipartFile file, HttpServletRequest req, PageVO page) throws UnsupportedEncodingException {
+		MemberVO member = (MemberVO) session.getAttribute("loginInfo");
+		vo.setWriter(member.getUser_id());
+		if (!file.isEmpty()) {
+			vo.setFilename(file.getOriginalFilename());
+			vo.setFilepath(comm.fileUpload("notice", file, req));
+		}
+		service.notice_reply(vo);
+		
+		model.addAttribute("page", page);
+		return "redirect:/notice/list"+ "?nowPage=" + page.getNowPage() + "&search="
+				+ page.getSearch() + "&keyword=" + URLEncoder.encode(page.getKeyword(), "utf-8");
+	}
+	
+	@RequestMapping("/replyPage")
+	public String replyPage(Model model, int id, PageVO page) {
+		model.addAttribute("vo", service.notice_info(id));
+		model.addAttribute("page", page);
+		return "notice/reply";
+	}
 
 	@RequestMapping("/delete")
 	public String delete(HttpSession session, HttpServletRequest req, int id, PageVO page) throws UnsupportedEncodingException {

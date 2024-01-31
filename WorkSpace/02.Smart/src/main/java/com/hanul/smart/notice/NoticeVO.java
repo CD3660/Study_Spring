@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class NoticeVO {
 
-	private int id, readcnt, no;
+	private int id, readcnt, no, root, step, indent, rid;
 	private String title, writer, content, filepath, filename, name;
 	private Date writedate;
 }

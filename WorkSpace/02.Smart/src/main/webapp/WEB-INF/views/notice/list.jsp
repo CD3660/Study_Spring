@@ -58,7 +58,9 @@
 		<c:forEach items="${page.list }" var="vo">
 			<tr>
 				<td>${vo.no }</td>
-				<td class="text-start"><a class="text-link"
+				<td class="text-start">
+				<span style="margin-left:${(vo.indent)*15}px"></span>
+				${vo.indent >0 ? '<i class="fa-regular fa-comment-dots me-3"></i>':'' }<a class="text-link"
 					href="<c:url value='/notice/info?id=${vo.id }&nowPage=${page.nowPage }&search=${page.search }&keyword=${page.keyword }'/>">${vo.title }</a></td>
 				<td>${vo.name }</td>
 				<td>${vo.writedate }</td>

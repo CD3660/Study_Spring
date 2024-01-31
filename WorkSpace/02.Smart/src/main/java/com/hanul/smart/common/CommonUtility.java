@@ -10,6 +10,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
@@ -34,27 +35,54 @@ import com.hanul.smart.notice.NoticeVO;
 public class CommonUtility {
 
 	public void fileDelete(String filepath, HttpServletRequest req) {
-		if(filepath!=null) {
+		if (filepath != null) {
 			File file = new File(filepath.replace(fileURL(req), "D://app/upload/"));
-			if(file.exists()) file.delete();
+			if (file.exists())
+				file.delete();
 		}
 	}
-	
+
 	public void fileDownload(NoticeVO vo, HttpServletRequest req, HttpServletResponse resp) {
 		File file = new File(vo.getFilepath().replace(fileURL(req), "D://app/upload/"));
-		//파일정보로부터 Mimetype을 알수 있다.
+		// 파일정보로부터 Mimetype을 알수 있다.
 		try {
 			String filename = URLEncoder.encode(vo.getFilename(), "utf-8");
 			resp.setContentType(req.getSession().getServletContext().getMimeType(filename));
-			resp.setHeader("content-disposition", "attachment; filename="+filename);
-			
-			
+			resp.setHeader("content-disposition", "attachment; filename=" + filename);
+
 			FileCopyUtils.copy(new FileInputStream(file), resp.getOutputStream());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
+	public void fileDownload(FileVO vo, HttpServletRequest req, HttpServletResponse resp) {
+		File file = new File(vo.getFilepath().replace(fileURL(req), "D://app/upload/"));
+		// 파일정보로부터 Mimetype을 알수 있다.
+		try {
+			String filename = URLEncoder.encode(vo.getFilename(), "utf-8");
+			resp.setContentType(req.getSession().getServletContext().getMimeType(filename));
+			resp.setHeader("content-disposition", "attachment; filename=" + filename);
+
+			FileCopyUtils.copy(new FileInputStream(file), resp.getOutputStream());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public ArrayList<FileVO> multipleFileUpload(String category, MultipartFile[] files, HttpServletRequest req) {
+		ArrayList<FileVO> list = null;
+		for(MultipartFile file : files) {
+			if(file.isEmpty()) continue;
+			if(list == null) list = new ArrayList<FileVO>();
+			FileVO vo = new FileVO();
+			vo.setFilename(file.getOriginalFilename());
+			vo.setFilepath(fileUpload(category, file, req));
+			list.add(vo);
+		}
+		return list;
+	}
+
 	public String fileUpload(String category, MultipartFile file, HttpServletRequest req) {
 		String upload = "D://app/upload/" + category + new SimpleDateFormat("/yyyy/MM/dd/").format(new Date());
 
@@ -64,18 +92,16 @@ public class CommonUtility {
 
 		String filename = UUID.randomUUID().toString() + "."
 				+ StringUtils.getFilenameExtension(file.getOriginalFilename());
-		
+
 		try {
 			file.transferTo(new File(upload, filename));
 		} catch (Exception e) {
 			e.getMessage();
 		}
-		
-		
 
-		return upload.replace("D://app/upload/", fileURL(req))+filename;
+		return upload.replace("D://app/upload/", fileURL(req)) + filename;
 	}
-	
+
 	public String fileURL(HttpServletRequest req) {
 		StringBuilder url = new StringBuilder();
 		url.append("http://");
@@ -188,7 +214,7 @@ public class CommonUtility {
 		}
 		return send;
 	}
-	
+
 	public boolean sendWelcome(MemberVO vo, String welcomeFile) {
 		boolean send = true;
 
@@ -205,11 +231,11 @@ public class CommonUtility {
 			sb.append("<div>본인이 아닐 경우 사이트에서 확인 바랍니다.</div>");
 			sb.append("<div>첨부된 파일을 확인하세요</div>");
 			sb.append("</body>");
-			
+
 			EmailAttachment file = new EmailAttachment();
 			file.setPath(welcomeFile);
 			mail.attach(file);
-			
+
 			mail.setHtmlMsg(sb.toString());// 메일 내용 붙이기
 			mail.send();// 메일 보내기
 		} catch (EmailException e) {

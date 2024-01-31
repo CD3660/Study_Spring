@@ -38,6 +38,12 @@ public class NoticeService {
 
 		return sql.insert("no.insert", vo);
 	}
+	
+	public int notice_reply(NoticeVO vo) {
+
+		return sql.insert("no.reply", vo);
+	}
+
 
 	public int notice_update(NoticeVO vo) {
 		return sql.update("no.update", vo);
