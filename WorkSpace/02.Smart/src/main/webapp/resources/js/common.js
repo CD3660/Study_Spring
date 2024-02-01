@@ -76,62 +76,70 @@ $(function() {
 		else $(this).removeClass("drag-over");
 
 	})
-	.on("drop", function(e){
-		var files = filterFolder(e.originalEvent.dataTransfer);
-		$(files).each(function(){
-			fileList.setFile(this);
+		.on("drop", function(e) {
+			var files = filterFolder(e.originalEvent.dataTransfer);
+			$(files).each(function() {
+				fileList.setFile(this);
+			});
+			console.log("fileList>", fileList)
+			fileList.showFile();
 		});
-		console.log("fileList>",fileList)
-		fileList.showFile();
-	});
-	
+
 	$("body").on("dragover dragleave drop", function(e) {
 		e.preventDefault();//드롭 허용을 위해 기본 동작 취소
 	});
-	
-	$("#file-multiple").on("change", function(){
+
+	$("#file-multiple").on("change", function() {
 		var files = this.files;
-		$(files).each(function(){
+		$(files).each(function() {
 			fileList.setFile(this);
 		});
 		fileList.showFile();
 	});
-	
-	
+
+
 });
 
-function multipleFileUpload(){
+function multipleFileUpload() {
 	//FileList 객체의 files를 input 태그 내부로 옮기는 작업
 	var transfer = new DataTransfer();
 	var files = fileList.getFile();
-	if(files.length>0){
-		for(i=0; i<files.length; i++){
-			transfer.items.add(files[i]);
+	if (files.length > 0) {
+		for (i = 0; i < files.length; i++) {
+			if(fileList.info.upload[i]) transfer.items.add(files[i]);
 		}
 	}
 	console.log(transfer.files);
-	$('#file-multiple').prop("files",transfer.files);
+	$('#file-multiple').prop("files", transfer.files);
 }
 
 //파일 관련 처리
-function FileList(){
+function FileList() {
 	this.files = [];
-	this.setFile = function(file){
+	this.info = { upload: [], id: [], remove: [] };//업로드 여부, 업로드 되어있는 파일 id, 삭제할 파일 id
+	this.setFile = function(file, id) {
+		this.info.upload.push(typeof id == "undefined");
+		if(typeof id != "undefined") this.info.id.push(id);
 		this.files.push(file);
 	}
-	this.getFile = function(){
+	this.getFile = function() {
 		return this.files;
 	}
 	//해당 파일 항목 삭제
 	//slice(시작,끝) : 시작 위치에서 끝-1까지 반환, 끝 생략 시 마지막까지, 원본 유지
 	//splice(시작, 갯수) : 시작 위치에서 개수만큼 제거, 원래 데이터 바뀜
-	this.removeFile = function(i){
-		this.files.splice(i,1);
+	this.removeFile = function(i) {
+		this.files.splice(i, 1);
+		this.info.upload.splice(i,1);
+		if(typeof this.info.id[i] != "undefined"){
+			this.info.remove.push(this.info.id[i]);
+			this.info.id.splice(i,1);
+		}
 	}
-	this.showFile = function(){
+	this.showFile = function() {
 		var tag = "";
-		if(this.files.length > 0){//파일 목록에 파일이 있는 경우
-			for(i=0; i<this.files.length; i++){
+		if (this.files.length > 0) {//파일 목록에 파일이 있는 경우
+			for (i = 0; i < this.files.length; i++) {
 				tag += `
 					<div class="file-item d-flex gap-2 my-1">
 						<button type="button" class="btn-close small" data-index="${i}"></button>
@@ -143,25 +151,26 @@ function FileList(){
 			tag += `<div class="py-3 text-center">첨부할 파일을 마우스로 끌어오세요</div>`;
 		}
 		$(".file-drag").html(tag);
-			console.log("fileList>", this.files);
+		console.log("fileList>", this.files);
+		console.log("info>", this.info);
 	}
 }
 
-function filterFolder(transfer){
+function filterFolder(transfer) {
 	var files = [], folder = false;
-	for(i=0; i<transfer.items.length; i++){
+	for (i = 0; i < transfer.items.length; i++) {
 		var entry = transfer.items[i].webkitGetAsEntry();
 		/*console.log("idx>",i,entry);*/
-		if(entry.isFile) files.push(transfer.files[i])
+		if (entry.isFile) files.push(transfer.files[i])
 		else folder = true;
 	}
-	if(folder){
+	if (folder) {
 		alert("폴더는 첨부할 수 없습니다.");
 	}
 	return files;
 }
 
-$(document).on("click", ".file-item .btn-close", function(){
+$(document).on("click", ".file-item .btn-close", function() {
 	fileList.removeFile($(this).data("index"));
 	fileList.showFile();
 });

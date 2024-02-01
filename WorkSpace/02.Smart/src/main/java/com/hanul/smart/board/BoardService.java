@@ -58,8 +58,21 @@ public class BoardService {
 	}
 
 	public int update(BoardVO vo) {
+		int dml = sql.update("bo.update", vo);
+		if(dml >0 & vo.getFileList()!=null) {
+			sql.insert("bo.fileInsert", vo);
+		}
+		return dml;
+	}
+	
+	public List<FileVO> removeFileList(String remove) {
+		
+		return sql.selectList("bo.removeFileList", remove);
+	}
+	
+	public int deleteFile(String remove) {
 
-		return 0;
+		return sql.delete("bo.deleteFile", remove);
 	}
 
 	public int delete(int id) {

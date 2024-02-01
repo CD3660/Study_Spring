@@ -63,4 +63,14 @@
 	<delete id="delete">
 		delete from board where id = #{id}
 	</delete>
+	<update id="update">
+		update board set title = #{title}, content = #{content}
+		where id = #{id}
+	</update>
+	<select id="removeFileList" resultType="fileInfo">
+		select * from board_file where id in (${remove})
+	</select>
+	<delete id="deleteFile">
+		delete from board_file where id in (${remove})
+	</delete>
 </mapper>

@@ -58,11 +58,13 @@
 			type="hidden" name="nowPage" value="${page.nowPage }" /> <input
 			type="hidden" name="search" value="${page.search }" /> <input
 			type="hidden" name="keyword" value="${page.keyword }" /> <input
-			type="hidden" name="dataPerPage" value="${page.dataPerPage }" />
+			type="hidden" name="dataPerPage" value="${page.dataPerPage }" /><input
+			type="hidden" name="url" value="board/info" />
 	</form>
+	<jsp:include page="comment.jsp"></jsp:include>
 	<script type="text/javascript">
 		$(".file-download").click(function() {
-			location = "download?id="+$(this).data("file");
+			location = "download?id=" + $(this).data("file");
 		});
 		$("#btn-list, #btn-updatePage, #btn-delete").click(function() {
 			var id = $(this).attr("id");

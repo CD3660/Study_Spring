@@ -27,23 +27,6 @@ public class MemberService {
 	@Autowired
 	private BCryptPasswordEncoder pwEncoder;
 
-	public String login(MemberVO vo, HttpServletRequest req, HttpSession session) {
-		StringBuilder sb = new StringBuilder("<script>");
-		MemberVO result = member_info(vo.getUser_id());
-
-		if (result == null) {
-			sb.append("alert('아이디나 비밀번호가 일치하지 않습니다.'); history.go(-1);");
-		} else {
-			if (pwEncoder.matches(vo.getUser_pw(), result.getUser_pw())) {
-				sb.append("location='").append(comm.appURL(req)).append("'");
-				session.setAttribute("loginInfo", result);
-			} else {
-				sb.append("alert('아이디나 비밀번호가 일치하지 않습니다.'); history.go(-1);");
-			}
-		}
-		sb.append("</script>");
-		return sb.toString();
-	}
 
 	public boolean find(MemberVO vo) {
 		if (sql.selectOne("member.find", vo) == null) {

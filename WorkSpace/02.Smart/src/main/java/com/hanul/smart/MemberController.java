@@ -11,9 +11,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -21,6 +23,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.hanul.smart.common.CommonUtility;
+import com.hanul.smart.common.PageVO;
 import com.hanul.smart.member.MemberService;
 import com.hanul.smart.member.MemberVO;
 
@@ -39,17 +42,50 @@ public class MemberController {
 	private CommonUtility comm;
 
 	@RequestMapping("/loginPage")
-	public String loginPage(HttpSession session) {
+	public String loginPage(HttpSession session, String url, PageVO page, String id) {
 		session.setAttribute("category", "login");
-
+		if (url != null) {
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("url", url);
+			map.put("page", page);
+			map.put("id", id);
+			session.setAttribute("redirect", map);
+		}
 		return "default/member/login";
 	}
 
-	@ResponseBody
+	private String redirectURL(HttpSession session, Model model) {
+		if(session.getAttribute("redirect") == null) {
+			return "redirect:/";
+		} else {
+			HashMap<String, Object> map = (HashMap<String, Object>)session.getAttribute("redirect");
+			model.addAttribute("url", map.get("url"));
+			model.addAttribute("page", map.get("page"));
+			model.addAttribute("id", map.get("id"));
+			
+			session.removeAttribute("redirect");
+			return "include/redirect";
+		}
+	}
+	
+	
 	@RequestMapping(value = "/login", produces = "text/html; charset=utf-8")
-	public String login(HttpSession session, HttpServletRequest req, MemberVO vo) {
+	public String login(HttpSession session, HttpServletRequest req, MemberVO vo, RedirectAttributes redirect, Model model) {
 
-		return service.login(vo, req, session);
+		MemberVO result = service.member_info(vo.getUser_id());
+		boolean check = false;
+		if (result != null) {
+			check = pwEncoder.matches(vo.getUser_pw(), result.getUser_pw());
+		}
+
+		if (check) {
+			session.setAttribute("loginInfo", result);
+			return redirectURL(session, model);
+		} else {
+			redirect.addFlashAttribute("fail", true);
+			return "redirect:loginPage";
+		}
+
 	}
 
 	@Value("${naver.clientId}")
@@ -74,7 +110,7 @@ public class MemberController {
 	}
 
 	@RequestMapping("/naverCallback")
-	public String naverCallback(String state, String code, HttpSession session) {
+	public String naverCallback(String state, String code, HttpSession session, Model model) {
 		if (code == null)
 			return "redirect:/";
 		// https://nid.naver.com/oauth2.0/token?grant_type=authorization_code
@@ -130,7 +166,7 @@ public class MemberController {
 
 		}
 
-		return "redirect:/";
+		return redirectURL(session, model);
 	}
 
 	@Value("${kakao.clientId}")
@@ -147,7 +183,7 @@ public class MemberController {
 	}
 
 	@RequestMapping("/kakaoCallback")
-	public String kakaoCallback(String state, String code, HttpSession session) {
+	public String kakaoCallback(String state, String code, HttpSession session, Model model) {
 		if (code == null)
 			return "redirect:/";
 
@@ -183,7 +219,8 @@ public class MemberController {
 		}
 		vo = service.member_info(id);
 		session.setAttribute("loginInfo", vo);
-		return "redirect:/";
+		
+		return redirectURL(session, model);
 	}
 
 	@RequestMapping("/logout")
@@ -277,9 +314,9 @@ public class MemberController {
 //			session.setAttribute("loginInfo", vo);
 			String welcomeFile = session.getServletContext().getRealPath("resources/files/과정평가형_풀이.pdf");
 			comm.sendWelcome(vo, welcomeFile);
-			
+
 			msg.append("alert('회원가입 완료');");
-			msg.append("location='").append(req.getContextPath()+"/member/loginPage").append("';");
+			msg.append("location='").append(req.getContextPath() + "/member/loginPage").append("';");
 		} else {
 			msg.append("alert('회원가입 실패');");
 			msg.append("history.go(-1);");

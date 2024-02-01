@@ -58,12 +58,34 @@ public class BoardController {
 		model.addAttribute("page", page);
 		return "board/insert";
 	}
+
 	@RequestMapping("updatePage")
 	public String updatePage(PageVO page, Model model, int id) {
 		model.addAttribute("page", page);
 		model.addAttribute("vo", service.info(id));
-		
+
 		return "board/update";
+	}
+
+	@RequestMapping("/update")
+	public String update(PageVO page, Model model, BoardVO vo, String remove, MultipartFile[] files,
+			HttpServletRequest req) {
+		vo.setFileList(comm.multipleFileUpload("board", files, req));
+		if (service.update(vo) > 0) {
+			if (!remove.isEmpty()) {
+				List<FileVO> fileList = service.removeFileList(remove);
+				if (service.deleteFile(remove) > 0) {
+					for (FileVO file : fileList) {
+						comm.fileDelete(file.getFilepath(), req);
+					}
+				}
+			}
+		}
+		model.addAttribute("id", vo.getId());
+		model.addAttribute("url", "board/info");
+		model.addAttribute("page", page);
+		
+		return "include/redirect";
 	}
 
 	@RequestMapping("insert")
@@ -86,7 +108,7 @@ public class BoardController {
 		}
 		model.addAttribute("page", page);
 		model.addAttribute("id", id);
-		model.addAttribute("url", "list");
+		model.addAttribute("url", "board/list");
 		return "include/redirect";
 	}
 

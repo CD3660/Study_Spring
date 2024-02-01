@@ -8,7 +8,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<form method="post" action="insert" enctype="multipart/form-data">
+	<form method="post" action="update" enctype="multipart/form-data">
 		<input type="hidden" name="writer" value="${loginInfo.user_id }" />
 		<table class="table tb-row">
 			<colgroup>
@@ -64,10 +64,11 @@
 			type="hidden" name="nowPage" value="${page.nowPage }" /> <input
 			type="hidden" name="search" value="${page.search }" /> <input
 			type="hidden" name="keyword" value="${page.keyword }" /> <input
-			type="hidden" name="dataPerPage" value="${page.dataPerPage }" />
+			type="hidden" name="dataPerPage" value="${page.dataPerPage }" /> <input
+			type="hidden" name="remove" value="" />
 	</form>
 	<div class="btn-toolbar justify-content-center gap-2">
-		<button class="btn btn-primary" id="btn-insert">방명록 등록</button>
+		<button class="btn btn-primary" id="btn-update">방명록 수정</button>
 		<button class="btn btn-danger" id="btn-cancle">취소</button>
 	</div>
 	<c:set var="params"
@@ -77,7 +78,7 @@
 		var fileList = new FileList();
 		//첨부된 파일 정보를 FileList객체에 담기
 		<c:forEach items="${vo.fileList }" var="file">
-		fileList.setFile( urlToFile("${file.filepath}","${file.filename}"));
+		fileList.setFile( urlToFile("${file.filepath}","${file.filename}"),${file.id});
 		</c:forEach>
 		console.log("fileList>", fileList)
 
@@ -95,10 +96,10 @@
 			return file;
 		}
 
-		$("#btn-insert").click(function() {
+		$("#btn-update").click(function() {
 			if (notEmpty()) {
 				multipleFileUpload();
-				console.log($('#file-multiple').val());
+				$("[name=remove]").val(fileList.info.remove);
 				$("form").submit();
 			}
 		});
