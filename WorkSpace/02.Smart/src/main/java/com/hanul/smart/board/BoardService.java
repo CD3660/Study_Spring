@@ -79,7 +79,12 @@ public class BoardService {
 
 		return sql.delete("bo.delete", id);
 	}
-	
+	public int commentInsert(BoardCommentVO vo) {
+		return sql.insert("bo.commentInsert", vo);
+	}
+	public List<BoardCommentVO> commentList(int board_id) {
+		return sql.selectList("bo.commentList", board_id);
+	}
 
 
 }

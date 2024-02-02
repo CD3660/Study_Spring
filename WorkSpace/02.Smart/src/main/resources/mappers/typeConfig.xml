@@ -10,6 +10,7 @@
 		<typeAlias type="com.hanul.smart.member.MemberVO" alias="memInfo"/>
 		<typeAlias type="com.hanul.smart.notice.NoticeVO" alias="noInfo"/>
 		<typeAlias type="com.hanul.smart.board.BoardVO" alias="boInfo"/>
+		<typeAlias type="com.hanul.smart.board.BoardCommentVO" alias="boComment"/>
 		<typeAlias type="com.hanul.smart.common.FileVO" alias="fileInfo"/>
 	</typeAliases>
 </configuration>

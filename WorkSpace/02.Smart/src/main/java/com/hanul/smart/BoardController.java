@@ -9,9 +9,13 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.hanul.smart.board.BoardCommentVO;
 import com.hanul.smart.board.BoardService;
 import com.hanul.smart.board.BoardVO;
 import com.hanul.smart.common.CommonUtility;
@@ -33,7 +37,7 @@ public class BoardController {
 	public String list(HttpSession session, PageVO page, Model model) {
 		session.setAttribute("category", "bo");
 		model.addAttribute("page", service.list(page));
-
+		
 		return "board/list";
 	}
 
@@ -111,5 +115,22 @@ public class BoardController {
 		model.addAttribute("url", "board/list");
 		return "include/redirect";
 	}
+	
+	@ResponseBody
+	@RequestMapping("/comment/insert")
+	public boolean commentInsert(BoardCommentVO vo) {
+		
+		return service.commentInsert(vo) == 1;
+	}
+	
+	@RequestMapping("/comment/list/{board_id}")
+	public String commentList(@PathVariable int board_id, Model model) {
+		model.addAttribute("list", service.commentList(board_id)) ;
+		model.addAttribute("crlf", "\r\n");
+		model.addAttribute("lf", "\n");
+		
+		return "board/comment/comment_list";
+	}
+	
 
 }
