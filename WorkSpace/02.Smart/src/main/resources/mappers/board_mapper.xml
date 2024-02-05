@@ -85,4 +85,10 @@
 		where board_id = #{board_id}
 		order by c.writedate desc
 	</select>
+	<update id="commentUpdate">
+		update board_comment set content = #{content} where id = #{id}
+	</update>
+	<delete id="commentDelete">
+		delete from board_comment where id = #{id}
+	</delete>
 </mapper>

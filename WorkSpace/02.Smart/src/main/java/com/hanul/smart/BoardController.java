@@ -1,5 +1,6 @@
 package com.hanul.smart;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -130,6 +131,34 @@ public class BoardController {
 		model.addAttribute("lf", "\n");
 		
 		return "board/comment/comment_list";
+	}
+	
+	@ResponseBody
+	@RequestMapping("/comment/update")
+	public Object commentUpdate(BoardCommentVO vo, Model model) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		if(service.commentUpdate(vo) > 0) {
+			map.put("result", true);
+			map.put("msg", "성공");
+			map.put("content", vo.getContent());
+		} else {
+			map.put("result", false);
+			map.put("msg", "실패");
+		}
+		return map;
+	}
+	@ResponseBody
+	@RequestMapping("/comment/delete")
+	public Object commentDelete(int id, Model model) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		if(service.commentDelete(id) > 0) {
+			map.put("result", true);
+			map.put("msg", "성공");
+		} else {
+			map.put("result", false);
+			map.put("msg", "실패");
+		}
+		return map;
 	}
 	
 

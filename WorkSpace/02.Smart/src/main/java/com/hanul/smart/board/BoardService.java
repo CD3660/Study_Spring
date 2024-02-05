@@ -85,6 +85,12 @@ public class BoardService {
 	public List<BoardCommentVO> commentList(int board_id) {
 		return sql.selectList("bo.commentList", board_id);
 	}
+	public int commentUpdate(BoardCommentVO vo) {
+		return sql.update("bo.commentUpdate", vo);
+	}
+	public int commentDelete(int id) {
+		return sql.delete("bo.commentDelete", id);
+	}
 
 
 }

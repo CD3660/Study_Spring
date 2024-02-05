@@ -12,7 +12,7 @@
 		</div>
 	</c:if>
 	<c:forEach items="${list }" var="vo">
-		<div class="comment w-pct80 py-3 border-bottom">
+		<div class="comment w-pct80 py-3 border-bottom" data-id="${vo.id }">
 			<div class="d-flex justify-content-between">
 				<div class="d-flex align-items-center mb-2">
 					<span class="me-2"> <c:if test="${empty vo.profile}">
@@ -24,8 +24,8 @@
 				</div>
 				<div>
 					<c:if test="${vo.writer eq loginInfo.user_id }">
-						<span class="me-4">댓글수정 [ <span class="writing">${fn: length(vo.content) }</span> /
-							200 ]
+						<span class="me-4">댓글수정 [ <span class="writing">${fn: length(vo.content) }</span>
+							/ 200 ]
 						</span>
 						<a class="btn btn-outline-info btn-sm btn-update-save">수정</a>
 						<a class="btn btn-outline-danger btn-sm btn-delete-cancle">삭제</a>
@@ -43,7 +43,20 @@
 			if ($(this).text() == "수정") {
 				updateStatus(_comment);
 			} else {
-				
+				$.ajax({
+					url:"comment/update",
+					data:{
+						id: _comment.data("id"),
+						content : _comment.find("textarea").val()
+					}
+				}).done(function( resp ) {
+					console.log(resp);
+					alert(resp.msg);
+					if(resp.result){
+						_comment.find(".hidden").text(resp.content);
+						infoStatus(_comment);
+					}
+				})
 			}
 		})
 		$(".btn-delete-cancle").click(function() {
@@ -51,7 +64,19 @@
 			if ($(this).text() == "취소") {
 				infoStatus(_comment);
 			} else {
-				
+				if(confirm("댓글을 삭제하시겠습니까?")){
+					$.ajax({
+						url:"comment/delete",
+						data: {
+							id:_comment.data("id")
+						}
+					}).done(function( resp ) {
+						alert(resp.msg);
+						if(resp.result){
+							_comment.remove();
+						}
+					})
+				}
 			}
 		})
 
