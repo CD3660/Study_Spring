@@ -49,7 +49,7 @@ public class Test {
 		}
 		sc.close();
 	}
-	
+	@Disabled
 	@org.junit.Test
 	public void join() {
 		Scanner sc = new Scanner(System.in);
@@ -78,4 +78,6 @@ public class Test {
 	public void query_test() {
 		System.out.println("오늘:" + sql.selectOne("today"));
 	}
+	
+	
 }

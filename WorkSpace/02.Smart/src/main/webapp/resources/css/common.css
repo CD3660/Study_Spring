@@ -42,6 +42,11 @@ table.tb-update td {
 a.text-link:hover {
 	text-decoration: underline;
 	font-weight: bold;
+	cursor: pointer;
+}
+a.text-link {
+	text-decoration: none;
+	color:initial;
 }
 .profile {
 	width: 38px;

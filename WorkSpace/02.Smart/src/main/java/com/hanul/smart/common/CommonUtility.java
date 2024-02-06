@@ -34,6 +34,8 @@ import com.hanul.smart.notice.NoticeVO;
 @PropertySource("classpath:dbconn/conninfo.properties")
 public class CommonUtility {
 
+	int a;
+	
 	public void fileDelete(String filepath, HttpServletRequest req) {
 		if (filepath != null) {
 			File file = new File(filepath.replace(fileURL(req), "D://app/upload/"));
@@ -49,7 +51,6 @@ public class CommonUtility {
 			String filename = URLEncoder.encode(vo.getFilename(), "utf-8");
 			resp.setContentType(req.getSession().getServletContext().getMimeType(filename));
 			resp.setHeader("content-disposition", "attachment; filename=" + filename);
-
 			FileCopyUtils.copy(new FileInputStream(file), resp.getOutputStream());
 		} catch (Exception e) {
 			e.printStackTrace();
