@@ -17,7 +17,7 @@
 		<li class="nav-item"><a class="nav-link">기타등등2</a></li>
 	</ul>
 	<div class="row mb-2 justify-content-between">
-		<div class="col-auto animal-top"></div>
+		<div class="d-flex gap-2 col-auto animal-top"></div>
 		<div class="col-auto">
 			<select id="dataPerPage" class="form-select">
 				<c:forEach var="i" begin="1" end="5">
@@ -28,7 +28,8 @@
 	</div>
 	<div id="data-list"></div>
 	<jsp:include page="../include/modal.jsp"></jsp:include>
-	
+	<jsp:include page="../include/loading.jsp"></jsp:include>
+	<script src='<c:url value="/js/animal.js"/>'></script>
 	<script type="text/javascript"
 		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=앱키"></script>
 	<script type="text/javascript">
@@ -101,6 +102,8 @@
 			if($(".nav-pills li .active").closest(".nav-item").index() == 1)	animal_list(1);
 		})
 		function pharmacy_list(nowPage) {
+			$(".animal-top").empty();
+			
 			var table
 			=
 			`
@@ -143,16 +146,29 @@
 			})
 		}
 		function animal_list(nowPage) {
-			animal_sido();
+			$(".loading").removeClass("d-none");
 			
+			if($("#sido").length == 0) animal_sido();
+			
+			var animal = {
+				pageNo:nowPage,
+				numOfRows:page.dataPerPage,
+				sido: $("#sido").length==1 ? $("#sido").val() : "",
+				sigungu: $("#sigungu").length==1 ? $("#sigungu").val() : "",
+				shelter: $("#shelter").length==1 ? $("#shelter").val() : "",
+				upkind: $("#upkind").length==1 ? $("#upkind").val() : "",
+				kind: $("#kind").length==1 ? $("#kind").val() : ""
+			}
 			$.ajax({
 				url: "animal/list",
-				data:{
-					pageNo:nowPage,
-					numOfRows:page.dataPerPage
-				}
+				data: JSON.stringify(animal),
+				type:'post',
+				contentType:'application/json'
 			}).done(function( resp ) {
 				$("#data-list").html(resp);
+				setTimeout(function() {
+					$(".loading").addClass("d-none");
+				}, 1000);
 			});
 		}
 		function animal_sido() {
@@ -160,6 +176,7 @@
 				url: "animal/sido"
 			}).done(function( resp ) {
 				$(".animal-top").prepend(resp);
+				animal_type();
 			});
 		}
 		var page = { dataPerPage: 10, pagePerBlock: 10 };

@@ -8,7 +8,16 @@
 	height: 120px;
 }
 </style>
-
+<c:if test="${empty list.response.body.items.item}">
+	<table class="table tb-list animal empty">
+		<tr>
+			<th></th>
+		</tr>
+		<tr>
+			<td>${empty list.response.header.errorMsg ? "조회 결과가 없습니다." : list.response.header.errorMsg}</td>
+		</tr>
+	</table>
+</c:if>
 <c:forEach items="${list.response.body.items.item}" var="vo">
 	<table class="table tb-list animal">
 		<colgroup>
@@ -63,12 +72,22 @@
 	</table>
 </c:forEach>
 <script>
+if(${empty list.response.body.items.item}){
+	var path = "";
+	$(".animal-top select").each(function() {
+		if($(this).val()!=""){
+			var item = $(this).find("option:selected").text();
+			path += `<span class="me-2">\${item}</span>`;
+		}
+	})
+	$("table.empty th").html(path);
+}
+
 $(".popfile").click(function() {
 	$("#modal-map .modal-body").html($(this).clone());
-	$("#modal-map .popfile").removeClass("popfile");
-	$("#modal-map").removeAttr("style");
+	$("#modal-map .popfile").removeClass("popfile").addClass("w-pct100");
 	new bootstrap.Modal($("#modal-map")).show();
 })
 
-paging(${list.response.body.totalCount},${list.response.body.pageNo});
+paging(${empty list.response.header.errorMsg ? list.response.body.totalCount : 0},${list.response.body.pageNo});
 </script>

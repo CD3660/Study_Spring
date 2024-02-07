@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -42,39 +43,84 @@ public class DataController {
 		url.append("&ServiceKey=").append(key);
 		url.append("&pageNo=").append(pageNo);
 		url.append("&numOfRows=").append(numOfRows);
-		
+
 		return responseAPI(url);
 	}
+
 	private String animalURL = "http://apis.data.go.kr/1543061/abandonmentPublicSrvc/";
-	
-	
+
 	@RequestMapping("/animal/sido")
 	public Object animal_sido(Model model) {
 		StringBuilder url = new StringBuilder(animalURL);
 		url.append("sido");
 		url.append("?_type=json");
+		url.append("&numOfRows=50");
 		url.append("&ServiceKey=").append(key);
-		
+
 		model.addAttribute("list", responseAPI(url));
 		return "data/animal/animal_sido";
 	}
-	
+
+	@RequestMapping("/animal/sigungu")
+	public Object animal_sigungu(Model model, String sido) {
+		StringBuilder url = new StringBuilder(animalURL);
+		url.append("sigungu");
+		url.append("?_type=json");
+		url.append("&numOfRows=50");
+		url.append("&upr_cd=").append(sido);
+		url.append("&ServiceKey=").append(key);
+
+		model.addAttribute("list", responseAPI(url));
+		return "data/animal/animal_sigungu";
+	}
+
+	@RequestMapping("/animal/shelter")
+	public Object shelter(Model model, String sido, String sigungu) {
+		StringBuilder url = new StringBuilder(animalURL);
+		url.append("shelter");
+		url.append("?_type=json");
+		url.append("&numOfRows=50");
+		url.append("&upr_cd=").append(sido);
+		url.append("&org_cd=").append(sigungu);
+		url.append("&ServiceKey=").append(key);
+
+		model.addAttribute("list", responseAPI(url));
+		return "data/animal/animal_shelter";
+	}
+	@RequestMapping("/animal/kind")
+	public Object kind(Model model, String upkind) {
+		StringBuilder url = new StringBuilder(animalURL);
+		url.append("kind");
+		url.append("?_type=json");
+		url.append("&numOfRows=50");
+		url.append("&up_kind_cd=").append(upkind);
+		url.append("&ServiceKey=").append(key);
+
+		model.addAttribute("list", responseAPI(url));
+		return "data/animal/animal_kind";
+	}
+
 	@RequestMapping("/animal/list")
-	public Object animal_list(int pageNo, int numOfRows, Model model) {
+	public Object animal_list(@RequestBody HashMap<String, Object> map, Model model) {
 		StringBuilder url = new StringBuilder(animalURL);
 		url.append("abandonmentPublic");
 		url.append("?_type=json");
 		url.append("&ServiceKey=").append(key);
-		url.append("&pageNo=").append(pageNo);
-		url.append("&numOfRows=").append(numOfRows);
-		
+		url.append("&pageNo=").append(map.get("pageNo"));
+		url.append("&numOfRows=").append(map.get("numOfRows"));
+		url.append("&upr_cd=").append(map.get("sido"));
+		url.append("&org_cd=").append(map.get("sigungu"));
+		url.append("&care_reg_no=").append(map.get("shelter"));
+		url.append("&upkind=").append(map.get("upkind"));
+		url.append("&kind=").append(map.get("kind"));
+
 		model.addAttribute("list", responseAPI(url));
 		return "data/animal/animal_list";
 	}
-	
+
 	private HashMap<String, Object> responseAPI(StringBuilder url) {
-		
-		return new Gson().fromJson(comm.requestAPI(url.toString()), new TypeToken<HashMap<String, Object>>(){}.getType());
+		return new Gson().fromJson(comm.requestAPI(url.toString()), new TypeToken<HashMap<String, Object>>() {
+		}.getType());
 	}
 
 }
