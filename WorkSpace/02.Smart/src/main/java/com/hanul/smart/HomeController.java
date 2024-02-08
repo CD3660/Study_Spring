@@ -33,5 +33,11 @@ public class HomeController {
 		
 		return "home";
 	}
-
+	
+	@RequestMapping("/visual/list")
+	public String list(HttpSession session) {
+		session.setAttribute("category", "vi");
+		
+		return "visual/list";
+	}
 }
