@@ -58,6 +58,8 @@ public class CommonUtility {
 	}
 
 	public void fileDownload(FileVO vo, HttpServletRequest req, HttpServletResponse resp) {
+		
+		
 		File file = new File(vo.getFilepath().replace(fileURL(req), "D://app/upload/"));
 		// 파일정보로부터 Mimetype을 알수 있다.
 		try {

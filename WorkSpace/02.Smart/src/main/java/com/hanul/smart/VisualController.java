@@ -21,4 +21,24 @@ public class VisualController {
 
 		return service.department();
 	}
+	@RequestMapping("/hirement/year")
+	public List<HashMap<String, Object>> hirement_year() {
+
+		return service.hirement_year();
+	}
+	@RequestMapping("/hirement/month")
+	public List<HashMap<String, Object>> hirement_month() {
+
+		return service.hirement_month();
+	}
+	@RequestMapping("/hirement/top3/year")
+	public Object hirement_top3_year() {
+
+		return service.hirement_top3_year();
+	}
+	@RequestMapping("/hirement/top3/month")
+	public Object hirement_top3_month() {
+
+		return service.hirement_top3_month();
+	}
 }
