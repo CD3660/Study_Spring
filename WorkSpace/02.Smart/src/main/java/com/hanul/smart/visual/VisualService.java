@@ -21,35 +21,21 @@ public class VisualService {
 		return sql.selectList("visual.dept_list");
 	}
 
-	public List<HashMap<String, Object>> hirement_year() {
+	public List<HashMap<String, Object>> hirement_year(HashMap<String, Object> map) {
 
-		return sql.selectList("visual.hire_y");
+		return sql.selectList("visual.hire_y", map);
 	}
 	public List<HashMap<String, Object>> hirement_month() {
 
 		return sql.selectList("visual.hire_m");
 	}
-	public Object hirement_top3_year() {
-		List<HashMap<String, Object>> list = sql.selectList("visual.hire_top3_y");
-		Object[] keys = list.get(0).keySet().toArray();
-		Arrays.sort(keys);
-		keys = Arrays.copyOfRange(keys, 0, keys.length-1);
+	public List<HashMap<String, Object>> hirement_top3_year(HashMap<String, Object> map) {
 		
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("list", list);
-		map.put("unit", keys);
-		return map;
+		return sql.selectList("visual.hire_top3_y", map);
 	}
-	public Object hirement_top3_month() {
-		List<HashMap<String, Object>> list = sql.selectList("visual.hire_top3_m");
-		Object[] keys = list.get(0).keySet().toArray();
-		Arrays.sort(keys);
-		keys = Arrays.copyOfRange(keys, 0, keys.length-1);
+	public List<HashMap<String, Object>> hirement_top3_month() {
 		
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("list", list);
-		map.put("unit", keys);
-		return map;
+		return sql.selectList("visual.hire_top3_m");
 	}
 
 }

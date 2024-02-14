@@ -1,5 +1,6 @@
 package com.hanul.smart;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -39,5 +40,14 @@ public class HomeController {
 		session.setAttribute("category", "vi");
 		
 		return "visual/list";
+	}
+	@RequestMapping("/error")
+	public String error(HttpServletRequest req, Model model) {
+		int errorCode = (int) req.getAttribute("javax.servlet.error.status_code");
+		if(errorCode==500) {
+			Throwable exception = (Throwable) req.getAttribute("javax.servlet.error.exception");
+			model.addAttribute("error", exception.toString());
+		}
+		return "default/error/" + (errorCode==404?404:"common");
 	}
 }

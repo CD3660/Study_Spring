@@ -5,14 +5,14 @@
 <mapper namespace="customer">
 	<select id="list" resultType="cuInfo">
 		select * 
-		from customer 
+		from customer
 		<if test=" name != '' ">
 			where lower(name) like lower('%'||#{name}||'%')
 		</if>
 	</select>
 	<select id="info" resultType="cuInfo">
 		select * 
-		from customer 
+		from customer
 		where customer_id = #{cusomer_id}
 	</select>
 	<update id="update">

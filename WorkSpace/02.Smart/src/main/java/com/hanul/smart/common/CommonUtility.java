@@ -33,8 +33,6 @@ import com.hanul.smart.notice.NoticeVO;
 @Service
 @PropertySource("classpath:dbconn/conninfo.properties")
 public class CommonUtility {
-
-	int a;
 	
 	public void fileDelete(String filepath, HttpServletRequest req) {
 		if (filepath != null) {

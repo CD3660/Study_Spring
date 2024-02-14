@@ -17,7 +17,13 @@
 	display: flex;
 	align-items: center;
 }
+
+.year {
+	width: 80px;
+	text-align: center;
+}
 </style>
+<link href="<c:url value='/css/yearpicker.css'/>" rel="stylesheet" />
 </head>
 <body>
 	<h3 class="mb-4">사원정보분석</h3>
@@ -39,7 +45,6 @@
 				<label class="form-check-label"> <input
 					class="form-check-input" type="radio" name="chart" value="doughnut">도넛그래프
 				</label>
-
 			</div>
 		</div>
 		<div class="tab text-center mb-3">
@@ -59,6 +64,13 @@
 					class="form-check-input" type="radio" name="unit" value="month">월별
 				</label>
 			</div>
+			<div class="d-inline-block year-range">
+				<div class="d-flex gap-2">
+					<input type="text" class="year form-control" id="begin" readonly />
+					<span>~</span> <input type="text" class="year form-control"
+						id="end" readonly />
+				</div>
+			</div>
 		</div>
 		<canvas id="chart" class="m-auto" style="height: 100%"></canvas>
 	</div>
@@ -68,7 +80,26 @@
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-autocolors"></script>
+	<script src="<c:url value='/js/yearpicker.js'/>"></script>
 	<script>
+	
+	var thisYear = new Date().getFullYear();
+		
+		$("#begin").yearpicker({
+			year: thisYear-9,
+		    startYear: thisYear-50,
+		    endYear: thisYear,
+		});
+		$("#end").yearpicker({
+		    year: thisYear,
+		    startYear: thisYear-50,
+		    endYear: thisYear,
+		});
+		$(document)
+		.on("click", ".yearpicker-items", function() {
+			if($("#begin").val()>$("#end").val()) $("#begin").val($("#end").val());
+			hire_info()
+		})
 		function makeLegend() {
 			var li = "";
 			var i
@@ -127,13 +158,20 @@
 			department();
 		})
 		$("[name=unit]").change(function() {
-			if($("#top3").prop("checked")) hirement_top3();
-			else hirement();
+			if($("[name=unit]:checked").val()=="year"){
+				$(".year-range").removeClass("d-none");
+			} else {
+				$(".year-range").addClass("d-none");
+			}
+			hire_info()
 		})
 		$("#top3").change(function() {
+			hire_info()
+		})
+		function hire_info() {
 			if($("#top3").prop("checked")) hirement_top3();
 			else hirement();
-		})
+		}
 		
 		function department() {
 			//if(typeof visual != "undefined") visual.destroy();
@@ -174,6 +212,7 @@
 		var colors = [ '#e60215', '#ff9500', '#fff200', '#a2ff00', '#00ff08',
 				'#00ffff', '#002aff', '#8c00ff', '#ff00f2', '#7b0094' ];
 		function barChart(info) {
+			initChart();
 			new Chart($("#chart"), {
 				type : 'bar',
 				data : {
@@ -218,6 +257,7 @@
 			makeLegend()
 		}
 		function lineChart(info) {
+			initChart();
 			new Chart($("#chart"), {
 				type : 'line',
 				data : {
@@ -267,6 +307,7 @@
 			info.pct = info.datas.map(function( value ) {
 				return Math.round(value/sum*10000)/100;
 			});
+			initChart();
 			new Chart($("#chart"), {
 				type : 'doughnut',
 				data : {
@@ -302,7 +343,10 @@
 			var unit = $("[name=unit]:checked").val();
 			
 			$.ajax({
-				url : "hirement/"+unit
+				url : "hirement/"+unit,
+				type:"post",
+				contentType:"application/json",
+				data:JSON.stringify({begin:$("#bigin").val(), end:$("#end").val()})
 			}).done(function(resp) {
 				var info = {};
 				info.datas=[], info.category =[], info.colors=[];
@@ -321,11 +365,14 @@
 			var unit = $("[name=unit]:checked").val();
 			
 			$.ajax({
-				url : "hirement/top3/"+unit
+				url : "hirement/top3/"+unit,
+				type:"post",
+				contentType:"application/json",
+				data:JSON.stringify({begin:$("#begin").val(), end:$("#end").val()})
 			}).done(function(resp) {
 				var info = {};
 				info.datas=[], info.category =resp.unit, info.colors=[], info.label=[];
-				info.type = (unit == "year" ? "bar" : "line ");
+				info.type = (unit == "year" ? "bar" : "line");
 				$(resp.list).each(function(idx, dept) {
 					info.label.push(this.DEPARTMENT_NAME);
 					var datas = info.category.map(function(item) {
@@ -333,16 +380,19 @@
 					});
 					info.datas.push(datas);
 				})
+				info.title = `상위 3위 부서의 \${unit == 'year'?"년도별":"월별"} 채용인원수`;
 				top3Chart(info);
 			})
 		}
 		function top3Chart(info) {
+			initChart();
 			var datas = [];
 			for(var idx=0; idx<info.datas.length; idx++){
 				var department = {};
 				department.data = info.datas[idx];
 				department.label = info.label[idx];
 				department.backgroundColor = colors[idx];
+				department.borderColor = colors[idx];
 				datas.push(department);
 			}
 			
@@ -360,7 +410,7 @@
 							}
 						},
 						legend : {
-							display : false
+							
 						},
 						autocolors : {
 							mode : 'data'
@@ -380,10 +430,10 @@
 					}
 				}
 			});
-			makeLegend()
 		}
 		
 		function unitChart(info) {
+			initChart();
 			new Chart($("#chart"), {
 				type : 'bar',
 				data : {
